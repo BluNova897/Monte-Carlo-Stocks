@@ -52,8 +52,11 @@ def main():
     ax[1,0].set_title('Trajectory average')
     sns.histplot(S[:, -1], kde=True, ax=ax[0,1])
     kde = stats.gaussian_kde(S[:, -1])
-    ax[0,1].axvline(S[np.argmax(kde(S[:,-1])), -1], c='green', ls = '-.', label='most likely price')
+    price_range = np.linspace(S[:, -1].min(), S[:, -1].max(), n_sim)
+    ax[0,1].axvline(price_range[np.argmax(kde(price_range))], c='green', ls = '-.', label='most likely price')
     ax[0,1].axvline(adj_close[-1], color='purple', ls='--', label = 'actual price')
+    print("Prediction delta:", price_range[np.argmax(kde(price_range))]-adj_close[-1])
+    print("relative prediction error:", 100*(price_range[np.argmax(kde(price_range))]-adj_close[-1])/adj_close[-1])
     ax[0,1].legend()
     traj_mean = S.mean(axis=0)
     traj_std = S.std(axis=0)
@@ -64,8 +67,8 @@ def main():
     mlp = []
     for i in range(n_steps):
         kde = stats.gaussian_kde(S[:, i])
-        ind = np.argmax(kde(S[:, i]))
-        mlp.append(S[ind, i])
+        price_range = np.linspace(S[:, i].min(), S[:, i].max(), n_sim)
+        mlp.append(price_range[np.argmax(kde(price_range))])
     ax[1,1].plot(mlp, label="most likely trajectory")
     ax[1, 1].plot(adj_close.values, lw=1, color="red", label="actual stock")
     ax[1,1].set_title("Most likely trajectory")
