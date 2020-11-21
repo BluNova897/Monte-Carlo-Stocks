@@ -75,26 +75,6 @@ def main():
     ax[1,1].legend()
     plt.show()
 
-def main2():
-    sns.set(style="darkgrid")
-    n_sim = 5000
-    S0, mu, sigma, days = extractParams("AMZN", datetime(2019,1,31), datetime(2019,12,31))
-    df = web.DataReader("AMZN", data_source="yahoo", start=datetime(2020,1,1), end=datetime.now())
-    adj_close = df["Adj Close"]
-    daily_returns = np.array([(y - x) / x for x, y in zip(adj_close, adj_close[1:])])
-    n_steps = len(adj_close)
-    S = c_geometricBrownianMT(n_steps, n_sim, 1, 0, adj_close[0], mu, sigma, n_threads=12)
-    S = np.reshape(S, (-1, n_steps))
-    fig, ax = plt.subplots(1,2,dpi=300)
-    for i in range(n_sim):
-        if n_sim%100 == 0:
-            ax[0].plot(S[i, :], lw=.5)
-    ax[0].plot(adj_close.values, lw=1, color="red")
-    sns.histplot(S[:, -1], kde=True, ax=ax[1])
-    ax[1].axvline(adj_close[-1], color='red', ls='--')
-    print(adj_close[-1])
-    plt.show()
-
 
 if __name__ == "__main__":
     main()

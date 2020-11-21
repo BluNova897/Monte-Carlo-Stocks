@@ -59,9 +59,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# C extensions
-*.so
-
 # Distribution / packaging
 .Python
 build/
@@ -193,3 +190,4 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+.c_assets/cmake-build-debug/*
